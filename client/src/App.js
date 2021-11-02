@@ -11,24 +11,27 @@ const App = () => {
   const [socket ,setSocket] = React.useState(null);
 
   const setUpSocket = async () => {
-    const token = localStorage.getItem("CC_token");
-    if(token.length > 0 && !socket){
-      const newSocket = io("http://localhost:8000", {
-        query: {
-          token: token
-        }
-      });
+    if(localStorage.getItem("CC_token")){
+      const token = localStorage.getItem("CC_token");
+      if(token.length > 0 && !socket){
+        const newSocket = io("http://localhost:8000", {
+          query: {
+            token: token
+          }
+        });
+  
+        newSocket.on("disconnect", () => {
+          setSocket(null);
+          setTimeout(setUpSocket, 3000)
+        });
+  
+        newSocket.on("connect", () => {
+          console.log("Socket connected")
+        });
+  
+        setSocket(newSocket);
+      }
 
-      newSocket.on("disconnect", () => {
-        setSocket(null);
-        setTimeout(setUpSocket, 3000)
-      });
-
-      newSocket.on("connect", () => {
-        console.log("Socket connected")
-      });
-
-      setSocket(newSocket);
     }
   }
 

@@ -12,7 +12,7 @@ const Register = ({history}) => {
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-        await axios.post("/user/register", {name, email, password})
+        await axios.post("http://localhost:8000/user/register", {name, email, password})
         .then((data) => {
             console.log(data)
             history.push("/login")
